@@ -5,6 +5,10 @@
     <title>User</title>
 </head>
 <body>
+<form action="/logout" method="post">
+    <button type="submit">Logout</button>
+</form>
+
 Welcome, {{name}}
 <form action="/create-card" method="post">
     <input type="text" placeholder="Name" name="cardName"/>
@@ -15,7 +19,7 @@ Welcome, {{name}}
 </form>
 <ol>
     {{#cardList}}
-    {{userCard}} {{cardName}} {{year}} {{type}} {{condition}}
+    {{cardName}} {{year}} {{type}} {{condition}}
     {{/cardList}}
 </ol>
 

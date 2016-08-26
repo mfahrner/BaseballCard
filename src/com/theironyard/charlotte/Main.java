@@ -95,6 +95,17 @@ public class Main {
                 })
         );
 
+        Spark.post(
+                "/logout",
+                ((request, response) -> {
+                    Session session = request.session();
+                    session.invalidate();
+
+                    response.redirect("/");
+                    return "";
+                })
+        );
+
     }
 
     static void addTestUser() {
