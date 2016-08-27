@@ -19,7 +19,9 @@ Welcome, {{name}}
 </form>
 <ol>
     {{#cardList}}
-    {{cardName}} {{year}} {{type}} {{condition}}
+    <li>
+        {{name}} {{year}} {{type}} {{condition}}<a href="/update-card/:{{id}}">  Edit</a><br>
+    </li>
     {{/cardList}}
 </ol>
 

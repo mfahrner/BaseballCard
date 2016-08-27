@@ -9,6 +9,8 @@ public class Card {
     int year;
     String type;
     String condition;
+    int id;
+    static int cardsMade = 0;
 
 
     public Card(String name, int year, String type, String condition) {
@@ -16,5 +18,6 @@ public class Card {
         this.year = year;
         this.type = type;
         this.condition = condition;
+        id = cardsMade++;
     }
 }
