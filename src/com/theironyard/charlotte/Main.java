@@ -101,20 +101,25 @@ public class Main {
                     String name = session.attribute("name");
 
 
+
                     User user = users.get(name);
                     if (user == null) {
                         throw new Exception("User is not logged in");
                     }
+                    String idValue = request.params("{{id}}");
+                    String idNumber = idValue.substring(4, idValue.length());
+                    int index = Integer.valueOf(idNumber);
 
                     String cardName = request.queryParams("cardName");
                     int year = Integer.valueOf(request.queryParams("year"));
                     String type = request.queryParams("type");
                     String condition = request.queryParams("condition");
-                    String index = request.queryParams("id");
+
+
 
                     Card userCard = new Card(cardName, year, type, condition);
 
-                    user.cardList.set(0, userCard);
+                    user.cardList.set(index, userCard);
 
                     response.redirect("/");
 
@@ -128,13 +133,17 @@ public class Main {
                     Session session = request.session();
 
                     String name = session.attribute("name");
+                    String idValue = request.params("{{id}}");
+                    String idNumber = idValue.substring(1, idValue.length());
+                    int index = Integer.valueOf(idNumber);
+
+
 
                     User user = users.get(name);
 
 
                     HashMap m = new HashMap();
-
-
+                        m.put("id", index);
                         m.put("name", user.name);
                         return new ModelAndView(m, "edit.html");
 

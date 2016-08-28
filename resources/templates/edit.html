@@ -10,12 +10,11 @@
 </form>
 
 Welcome, {{name}}
-    <form action="/update-card/:{{id}}" method="post">
+    <form action="/update-card/:id={{id}}" method="post">
         <input type="text" placeholder="Name" name="cardName"/>
         <input type="text" placeholder="Year" name="year"/>
         <input type="text" placeholder="Type" name="type"/>
         <input type="text" placeholder="Condition" name="condition"/>
-        <input type="hidden" value="{{id}}" name="id"/>
         <button type="submit">Add</button>
     </form>
 
