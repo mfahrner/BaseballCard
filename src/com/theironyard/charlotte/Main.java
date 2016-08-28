@@ -25,6 +25,8 @@ public class Main {
 
                     User user = users.get(name);
 
+
+
                     HashMap m = new HashMap();
 
                     if (user == null) {
@@ -85,6 +87,7 @@ public class Main {
                     String condition = request.queryParams("condition");
 
                     Card userCard = new Card(cardName, year, type, condition);
+
                     user.cardList.add(userCard);
 
                     response.redirect("/");
@@ -100,8 +103,6 @@ public class Main {
 
                     String name = session.attribute("name");
 
-
-
                     User user = users.get(name);
                     if (user == null) {
                         throw new Exception("User is not logged in");
@@ -115,9 +116,8 @@ public class Main {
                     String type = request.queryParams("type");
                     String condition = request.queryParams("condition");
 
-
-
                     Card userCard = new Card(cardName, year, type, condition);
+
 
                     user.cardList.set(index, userCard);
 
@@ -158,6 +158,25 @@ public class Main {
                 ((request, response) -> {
                     Session session = request.session();
                     session.invalidate();
+
+                    response.redirect("/");
+                    return "";
+                })
+        );
+
+        Spark.post(
+                "/delete/:{{id}}",
+                ((request, response) -> {
+                    Session session = request.session();
+                    String name = session.attribute("name");
+
+                    String idValue = request.params("{{id}}");
+                    String idNumber = idValue.substring(1, idValue.length());
+                    int removeNumber = Integer.valueOf(idNumber);
+
+                    User user = users.get(name);
+
+                    user.cardList.remove(removeNumber);
 
                     response.redirect("/");
                     return "";

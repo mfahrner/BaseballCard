@@ -20,7 +20,10 @@ Welcome, {{name}}
 <ol>
     {{#cardList}}
     <li>
-        {{name}} {{year}} {{type}} {{condition}}<a href="/update-card/:{{id}}">  Edit</a><br>
+        <form action="/delete/:{{id}}" method="post">
+            <input type="hidden" value="{{id}}" name="id"/>
+            <button type="submit">Delete</button> {{name}} {{year}} {{type}} {{condition}} <a href="/update-card/:{{id}}">  Edit</a>
+        </form>
     </li>
     {{/cardList}}
 </ol>
