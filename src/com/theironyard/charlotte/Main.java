@@ -110,14 +110,17 @@ public class Main {
                     String idValue = request.params("id");
                     int indexNumber = Integer.valueOf(idValue);
 
+                    Card userCard = user.cardList.get(indexNumber);
 
                     String cardName = request.queryParams("cardName");
                     int year = Integer.valueOf(request.queryParams("year"));
                     String type = request.queryParams("type");
                     String condition = request.queryParams("condition");
 
-                    Card userCard = new Card(cardName, year, type, condition);
-
+                    userCard.setName(cardName);
+                    userCard.setYear(year);
+                    userCard.setType(type);
+                    userCard.setCondition(condition);
 
                     user.cardList.set(indexNumber, userCard);
 
@@ -171,7 +174,19 @@ public class Main {
 
                     User user = users.get(name);
 
-                    user.cardList.remove(removeNumber);
+                    try {
+
+                        Card deleteCard = user.cardList.get(removeNumber);
+                        int deleteId = 0;
+
+                        deleteCard.setId(deleteId);
+
+
+                    } catch (IndexOutOfBoundsException e) {
+
+                    }
+                    
+                    user.cardList.remove(0);
 
                     response.redirect("/");
                     return "";
@@ -183,4 +198,6 @@ public class Main {
     static void addTestUser() {
         users.put("mike", new User("mike", "1234"));
     }
+
+    // indexoutofbounds
 }
