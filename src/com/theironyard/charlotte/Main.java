@@ -97,7 +97,7 @@ public class Main {
         );
 
         Spark.post(
-                "/update-card/:{{id}}",
+                "/update-card/:id",
                 ((request, response) -> {
                     Session session = request.session();
 
@@ -107,9 +107,9 @@ public class Main {
                     if (user == null) {
                         throw new Exception("User is not logged in");
                     }
-                    String idValue = request.params("{{id}}");
-                    String idNumber = idValue.substring(4, idValue.length());
-                    int index = Integer.valueOf(idNumber);
+                    String idValue = request.params("id");
+                    int indexNumber = Integer.valueOf(idValue);
+
 
                     String cardName = request.queryParams("cardName");
                     int year = Integer.valueOf(request.queryParams("year"));
@@ -119,7 +119,7 @@ public class Main {
                     Card userCard = new Card(cardName, year, type, condition);
 
 
-                    user.cardList.set(index, userCard);
+                    user.cardList.set(indexNumber, userCard);
 
                     response.redirect("/");
 
@@ -128,22 +128,18 @@ public class Main {
         );
 
         Spark.get(
-                "/update-card/:{{id}}",
+                "/update-card/:id",
                 ((request, response) -> {
                     Session session = request.session();
 
                     String name = session.attribute("name");
-                    String idValue = request.params("{{id}}");
-                    String idNumber = idValue.substring(1, idValue.length());
-                    int index = Integer.valueOf(idNumber);
-
-
+                    String idValue = request.params("id");
+                    int indexNumber = Integer.valueOf(idValue);
 
                     User user = users.get(name);
 
-
                     HashMap m = new HashMap();
-                        m.put("id", index);
+                        m.put("id", indexNumber);
                         m.put("name", user.name);
                         return new ModelAndView(m, "edit.html");
 
@@ -165,14 +161,13 @@ public class Main {
         );
 
         Spark.post(
-                "/delete/:{{id}}",
+                "/delete/:id",
                 ((request, response) -> {
                     Session session = request.session();
                     String name = session.attribute("name");
 
-                    String idValue = request.params("{{id}}");
-                    String idNumber = idValue.substring(1, idValue.length());
-                    int removeNumber = Integer.valueOf(idNumber);
+                    String idValue = request.params("id");
+                    int removeNumber = Integer.valueOf(idValue);
 
                     User user = users.get(name);
 
