@@ -9,7 +9,7 @@ public class Card {
     int year;
     String type;
     String condition;
-    int id;
+    static int id;
     static int cardsMade = 0;
 
 

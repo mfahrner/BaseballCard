@@ -25,8 +25,6 @@ public class Main {
 
                     User user = users.get(name);
 
-
-
                     HashMap m = new HashMap();
 
                     if (user == null) {
@@ -107,6 +105,7 @@ public class Main {
                     if (user == null) {
                         throw new Exception("User is not logged in");
                     }
+
                     String idValue = request.params("id");
                     int indexNumber = Integer.valueOf(idValue);
 
@@ -136,6 +135,7 @@ public class Main {
                     Session session = request.session();
 
                     String name = session.attribute("name");
+
                     String idValue = request.params("id");
                     int indexNumber = Integer.valueOf(idValue);
 
@@ -145,12 +145,9 @@ public class Main {
                         m.put("id", indexNumber);
                         m.put("name", user.name);
                         return new ModelAndView(m, "edit.html");
-
                 }),
                 new MustacheTemplateEngine()
         );
-
-
 
         Spark.post(
                 "/logout",
@@ -185,7 +182,7 @@ public class Main {
                     } catch (IndexOutOfBoundsException e) {
 
                     }
-                    
+
                     user.cardList.remove(0);
 
                     response.redirect("/");
@@ -198,6 +195,4 @@ public class Main {
     static void addTestUser() {
         users.put("mike", new User("mike", "1234"));
     }
-
-    // indexoutofbounds
 }

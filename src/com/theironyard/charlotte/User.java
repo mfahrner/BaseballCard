@@ -11,7 +11,6 @@ public class User {
 
     ArrayList<Card> cardList = new ArrayList<>();
 
-
     public User(String name, String password) {
         this.name = name;
         this.password = password;
