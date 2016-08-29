@@ -109,19 +109,23 @@ public class Main {
                     String idValue = request.params("id");
                     int indexNumber = Integer.valueOf(idValue);
 
-                    Card userCard = user.cardList.get(indexNumber);
+                    for (int i = 0; i < user.cardList.size(); i++) {
+                        if (user.cardList.get(i).getId() == indexNumber) {
+                            Card userCard = user.cardList.get(i);
 
-                    String cardName = request.queryParams("cardName");
-                    int year = Integer.valueOf(request.queryParams("year"));
-                    String type = request.queryParams("type");
-                    String condition = request.queryParams("condition");
+                            String cardName = request.queryParams("cardName");
+                            int year = Integer.valueOf(request.queryParams("year"));
+                            String type = request.queryParams("type");
+                            String condition = request.queryParams("condition");
 
-                    userCard.setName(cardName);
-                    userCard.setYear(year);
-                    userCard.setType(type);
-                    userCard.setCondition(condition);
+                            userCard.setName(cardName);
+                            userCard.setYear(year);
+                            userCard.setType(type);
+                            userCard.setCondition(condition);
 
-                    user.cardList.set(indexNumber, userCard);
+                            user.cardList.set(i, userCard);
+                        }
+                    }
 
                     response.redirect("/");
 
@@ -168,22 +172,14 @@ public class Main {
 
                     String idValue = request.params("id");
                     int removeNumber = Integer.valueOf(idValue);
-
                     User user = users.get(name);
 
-                    try {
+                    for (int i = 0; i < user.cardList.size(); i++) {
+                        if (user.cardList.get(i).getId() == removeNumber) {
 
-                        Card deleteCard = user.cardList.get(removeNumber);
-                        int deleteId = 0;
-
-                        deleteCard.setId(deleteId);
-
-
-                    } catch (IndexOutOfBoundsException e) {
-
+                            user.cardList.remove(i);
+                        }
                     }
-
-                    user.cardList.remove(0);
 
                     response.redirect("/");
                     return "";
