@@ -91,7 +91,7 @@ public class Card {
             String cardName = results.getString("name");
             int year = results.getInt("year");
             String type = results.getString("type");
-            String condition = results.getString("condtion");
+            String condition = results.getString("condition");
             int user_id = results.getInt("user_id");
 
             return new Card(id, cardName, year, type, condition, user_id);
