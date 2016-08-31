@@ -21,8 +21,7 @@ Welcome, {{name}}
     {{#cardList}}
     <li>
         <form action="/delete/{{id}}" method="post">
-            <input type="hidden" value="{{id}}" name="id"/>
-            <button type="submit">Delete</button> {{name}} {{year}} {{type}} {{condition}} <a href="/update-card/{{id}}">  Edit</a>
+            <button type="submit">Delete</button> {{cardName}} {{year}} {{type}} {{condition}} <a href="/update-card/{{id}}">  Edit</a>
         </form>
     </li>
     {{/cardList}}

@@ -1,18 +1,29 @@
 package com.theironyard.charlotte;
 
+import org.h2.tools.Server;
 import spark.ModelAndView;
 import spark.Session;
 import spark.Spark;
 import spark.template.mustache.MustacheTemplateEngine;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 
 public class Main {
 
-    static HashMap <String, User> users = new HashMap<>();
+    public static void main(String[] args) throws SQLException {
+        Server.createWebServer().start();
 
-    public static void main(String[] args) {
-        // adding test user to pop hashmap to test functionality of login
-        addTestUser();
+        Connection conn = DriverManager.getConnection("jdbc:h2:./main");
+
+        Statement stmt = conn.createStatement();
+
+        stmt.execute("CREATE TABLE IF NOT EXISTS users (id IDENTITY, name VARCHAR, password VARCHAR)");
+        stmt.execute("CREATE TABLE IF NOT EXISTS cards (id IDENTITY, name VARCHAR, year INT, type VARCHAR," +
+                " condition VARCHAR, user_id INT)");
 
         Spark.init();
 
@@ -23,7 +34,7 @@ public class Main {
 
                     String name = session.attribute("name");
 
-                    User user = users.get(name);
+                    User user = User.selectUser(conn, name);
 
                     HashMap m = new HashMap();
 
@@ -32,7 +43,7 @@ public class Main {
                     }
                     else {
                         m.put("name", user.name);
-                        m.put("cardList", user.cardList);
+                        m.put("cardList", Card.searchCards(conn, user.id));
                         return new ModelAndView(m, "user.html");
                     }
                 }),
@@ -46,8 +57,9 @@ public class Main {
 
                     String password = request.queryParams("password");
 
-                    User user = users.get(name);
-                    if ((user != null) && (!users.get(name).password.equals(password))) {
+                    User user = User.selectUser(conn, name);
+
+                    if (user != null && !user.password.equals(password)) {
                         Session session = request.session();
                         session.invalidate();
 
@@ -55,8 +67,7 @@ public class Main {
                     }
 
                     if (user == null) {
-                        user = new User(name, password);
-                        users.put(name, user);
+                        User.insertUser(conn, name, password);
                     }
 
                     Session session = request.session();
@@ -74,19 +85,19 @@ public class Main {
 
                     String name = session.attribute("name");
 
-                    User user = users.get(name);
+                    User user = User.selectUser(conn, name);
+
                     if (user == null) {
                         throw new Exception("User is not logged in");
                     }
 
+                    int user_id = user.id;
                     String cardName = request.queryParams("cardName");
                     int year = Integer.valueOf(request.queryParams("year"));
                     String type = request.queryParams("type");
                     String condition = request.queryParams("condition");
 
-                    Card userCard = new Card(cardName, year, type, condition);
-
-                    user.cardList.add(userCard);
+                    Card.insertCard(conn, cardName, year, type, condition, user_id);
 
                     response.redirect("/");
 
@@ -101,7 +112,8 @@ public class Main {
 
                     String name = session.attribute("name");
 
-                    User user = users.get(name);
+                    User user = User.selectUser(conn, name);
+
                     if (user == null) {
                         throw new Exception("User is not logged in");
                     }
@@ -109,23 +121,12 @@ public class Main {
                     String idValue = request.params("id");
                     int indexNumber = Integer.valueOf(idValue);
 
-                    for (int i = 0; i < user.cardList.size(); i++) {
-                        if (user.cardList.get(i).getId() == indexNumber) {
-                            Card userCard = user.cardList.get(i);
+                    String cardName = request.queryParams("cardName");
+                    int year = Integer.valueOf(request.queryParams("year"));
+                    String type = request.queryParams("type");
+                    String condition = request.queryParams("condition");
 
-                            String cardName = request.queryParams("cardName");
-                            int year = Integer.valueOf(request.queryParams("year"));
-                            String type = request.queryParams("type");
-                            String condition = request.queryParams("condition");
-
-                            userCard.setName(cardName);
-                            userCard.setYear(year);
-                            userCard.setType(type);
-                            userCard.setCondition(condition);
-
-                            user.cardList.set(i, userCard);
-                        }
-                    }
+                    Card.updateCard(conn, cardName, year, type, condition, indexNumber);
 
                     response.redirect("/");
 
@@ -143,7 +144,7 @@ public class Main {
                     String idValue = request.params("id");
                     int indexNumber = Integer.valueOf(idValue);
 
-                    User user = users.get(name);
+                    User user = User.selectUser(conn, name);
 
                     HashMap m = new HashMap();
                         m.put("id", indexNumber);
@@ -160,6 +161,7 @@ public class Main {
                     session.invalidate();
 
                     response.redirect("/");
+
                     return "";
                 })
         );
@@ -172,23 +174,14 @@ public class Main {
 
                     String idValue = request.params("id");
                     int removeNumber = Integer.valueOf(idValue);
-                    User user = users.get(name);
+//                    User user = User.selectUser(conn, name);
 
-                    for (int i = 0; i < user.cardList.size(); i++) {
-                        if (user.cardList.get(i).getId() == removeNumber) {
-
-                            user.cardList.remove(i);
-                        }
-                    }
+                    Card.deleteCard(conn, removeNumber);
 
                     response.redirect("/");
+
                     return "";
                 })
         );
-
-    }
-
-    static void addTestUser() {
-        users.put("mike", new User("mike", "1234"));
     }
 }
